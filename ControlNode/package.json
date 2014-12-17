@@ -2,7 +2,7 @@
   "name": "ControlNode",
   "version": "0.1.0",
   "description": "ControlNode",
-  "main": "index.js",
+  "main": "cpuMonitor.js",
   "scripts": {
     "test": "echo \"Error: no test specified! Configure in package.json\" && exit 1"
   },

@@ -5,7 +5,7 @@ function listen(handlePostedEvent) {
     express = require('express'),
     bodyParser = require('body-parser'),
 	
-	port = 9090;
+	port = 8080;
 	
 	var app = express();
 	app.use(bodyParser.urlencoded({
@@ -14,7 +14,14 @@ function listen(handlePostedEvent) {
 	app.use(bodyParser.json());
 	
 	app.get("/", function(req, res) {
-		console.log("Received a request.");
+		console.log("Received a request at main endpoint.");
+		res.send('To find out which application is running, GET to /app.\n' +
+				'To start an application, POST to /app, e.g. { "name" : "application_name" }\n' +
+				'To kill a running application, DELETE to /app.');
+	});
+	
+	app.get("/app", function(req, res) {
+		console.log("Received a request at /app endpoint.");
 		if (typeof child !== 'undefined') {
 			res.send("Process running, PID: " + child.pid);
 		} else {
@@ -22,24 +29,23 @@ function listen(handlePostedEvent) {
 		}
 	});
 	
-	app.post("/", function(req, res) {
-		console.log("Attempting to spawn: " + req.body.path);
-		// res.writeHead(200, {'Content-Type': 'text/plain'});
+	app.post("/app", function(req, res) {
+		
+		applicationToStart = 'apps/' + req.body.name;
+		console.log('Attempting to spawn: ' + applicationToStart);
 		
 		if (typeof child === 'undefined') {
-			child = spawn('node', [ req.body.path ]);
+			child = spawn('node', [ applicationToStart ]);
 			child.stdout.on('data', function (data) { console.log(data.toString()); });
 			child.stderr.on('data', function (data) { console.log(data.toString()); });
 			console.log('Spawned child pid: ' + child.pid);
 			res.send('Successfully spawned child');	
 		} else {
-			res.send("Child process already running.");
+			res.send("A child process is already running.");
 		}			
 	});
 	
-	app.delete("/", function(req, res) {
-		// res.writeHead(200, {'Content-Type': 'text/plain'});
-		
+	app.delete("/app", function(req, res) {
 		if (typeof child !== 'undefined') {
 			console.log('Exiting child pid: ' + child.pid);
 			child.kill();
@@ -51,7 +57,7 @@ function listen(handlePostedEvent) {
 	});
 
 	app.listen(port);
-	console.log('Listening...');
+	console.log('Listening on port ' + port);
 }
 
 module.exports = listen;
