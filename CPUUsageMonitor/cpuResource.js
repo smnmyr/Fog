@@ -1,3 +1,6 @@
+serverIP = '128.32.211.227';
+serverPort = 9999;
+
 var spawn = require('child_process').spawn;
 var http = require('http');
 
@@ -66,7 +69,7 @@ function updateTotalLoad() {
 http.createServer(function handler(request, response) {
 	response.writeHead(200, {'Content-Type': 'text/plain'});
 	response.end(totalCurrentLoad.toString());
-}).listen(1337, '127.0.0.1');
+}).listen(serverPort, serverIP);
 
-console.log('Server running at http://127.0.0.1:1337/');
+console.log('Server running at http://' + serverIP + ':' + serverPort);
 updateTotalLoad();
