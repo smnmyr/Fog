@@ -33,6 +33,13 @@ function listen(handlePostedEvent) {
 	
 	app.post("/app", function(req, res) {
 		
+		if (req.body.name === 'undefined') {
+			res.send('Client error: no or invalid app name specified.');
+			return;
+		}
+		
+		console.log(req.body);
+		
 		applicationToStart = 'apps/' + req.body.name;
 		console.log('Attempting to spawn: ' + applicationToStart);
 		
