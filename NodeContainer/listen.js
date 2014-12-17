@@ -1,5 +1,7 @@
 var spawn = require('child_process').spawn;
 
+var currentAppName;
+
 function listen(handlePostedEvent) {
 	var http = require('http'),
     express = require('express'),
@@ -23,7 +25,7 @@ function listen(handlePostedEvent) {
 	app.get("/app", function(req, res) {
 		console.log("Received a request at /app endpoint.");
 		if (typeof child !== 'undefined') {
-			res.send("Process running, PID: " + child.pid);
+			res.send('Application "' + currentAppName + '" is running at the moment.');
 		} else {
 			res.send("No process running at the moment.");
 		}
@@ -39,7 +41,10 @@ function listen(handlePostedEvent) {
 			child.stdout.on('data', function (data) { console.log(data.toString()); });
 			child.stderr.on('data', function (data) { console.log(data.toString()); });
 			console.log('Spawned child pid: ' + child.pid);
-			res.send('Successfully spawned child');	
+			
+			currentAppName = req.body.name;
+			
+			res.send('Successfully spawned child: ' + currentAppName);	
 		} else {
 			res.send("A child process is already running.");
 		}			
@@ -47,7 +52,7 @@ function listen(handlePostedEvent) {
 	
 	app.delete("/app", function(req, res) {
 		if (typeof child !== 'undefined') {
-			console.log('Exiting child pid: ' + child.pid);
+			console.log('Exiting child ' + currentAppName);
 			child.kill();
 			delete child;
 			res.send('Successfully exited child');

@@ -8,7 +8,7 @@ function processLoad(cpuLoad) {
 	else if (cpuLoad > 0.1) console.log('Low load on ASBase.');
 	else console.log('No load on ASBase.');
 	
-	// TODO Talk to actuator
+	// TODO Talk to some actuator
 }
 
 function getCPULoad() {
