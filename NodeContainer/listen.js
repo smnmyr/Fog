@@ -10,10 +10,28 @@ function listen(handlePostedEvent) {
 	port = 8080;
 	
 	var app = express();
+	
 	app.use(bodyParser.urlencoded({
 	    extended: true
 	}));
+	
 	app.use(bodyParser.json());
+	
+	app.all('/', function(req, res, next) {
+		res.header("Access-Control-Allow-Origin", "*");
+		res.header("Access-Control-Allow-Headers", "X-Requested-With");
+		res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST, DELETE');
+		res.header('Access-Control-Allow-Headers', 'Content-Type');
+		next();
+	});
+	
+	app.all('/app', function(req, res, next) {
+		res.header("Access-Control-Allow-Origin", "*");
+		res.header("Access-Control-Allow-Headers", "X-Requested-With");
+		res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST, DELETE');
+		res.header('Access-Control-Allow-Headers', 'Content-Type');
+		next();
+	});
 	
 	app.get("/", function(req, res) {
 		console.log("Received a request at main endpoint.");
@@ -33,7 +51,8 @@ function listen(handlePostedEvent) {
 	
 	app.post("/app", function(req, res) {
 		
-		if (req.body.name === 'undefined') {
+		if (typeof req.body.name === 'undefined') {
+			console.log('Client error: no or invalid app name specified.');
 			res.send('Client error: no or invalid app name specified.');
 			return;
 		}
