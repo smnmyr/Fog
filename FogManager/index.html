@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="us">
+<head>
+<meta charset="utf-8">
+<title>Siemens Fog Manager</title>
+<link href="jquery-ui.css" rel="stylesheet">
+<link href="style.css" rel="stylesheet">	
+<script src="http://code.jquery.com/jquery-1.8.2.js"></script>  
+<script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>  
+
+<script>
+var itemsAtRaspberry = [];
+var itemsAtNotebook = [];
+
+var dictionary = {};
+dictionary['Raspberry'] = 'http://128.32.211.227:8080/app';
+dictionary['Notebook'] = 'http://128.32.211.232:8080/app';
+
+function deployApp(appName, target) {
+	console.log("Deploying " + appName + " to " + target + " (" + dictionary[target] + ")");
+	$.ajax({ type: 'POST', url: dictionary[target], contentType: "application/json;charset=UTF-8", data: JSON.stringify({ "name" : appName })});
+}
+
+function undeployApp(appName, target) {
+	console.log("Undeploying " + appName + " at " + target + " (" + dictionary[target] + ")");
+	$.ajax({ type: 'DELETE', url: dictionary[target], contentType: "application/json;charset=UTF-8", data: JSON.stringify({ "name" : appName })});
+}
+
+$(function() {
+	$( "#sortable1, #sortable2, #sortable3" ).sortable({
+		connectWith: ".connectedSortable",
+		update: function( event, ui ) {
+			itemsAtRaspberryNew = $( "#sortable2" ).sortable( "toArray" );
+			itemsAtNotebookNew = $( "#sortable3" ).sortable( "toArray" );
+
+			// Undeploy from Raspberry
+			arrayLength = itemsAtRaspberry.length;
+			for (var i = 0; i < arrayLength; i++) {
+				if ($.inArray(itemsAtRaspberry[i], itemsAtRaspberryNew) < 0) {
+					undeployApp(itemsAtRaspberry[i], "Raspberry");
+				}
+			}
+
+			// Undeploy from Notebook
+			arrayLength = itemsAtNotebook.length;
+			for (var i = 0; i < arrayLength; i++) {
+				if ($.inArray(itemsAtNotebook[i], itemsAtNotebookNew) < 0) {
+					undeployApp(itemsAtNotebook[i], "Notebook");
+				}
+			}
+
+
+			// Deploy to Raspberry
+			var arrayLength = itemsAtRaspberryNew.length;
+			for (var i = 0; i < arrayLength; i++) {
+				if ($.inArray(itemsAtRaspberryNew[i], itemsAtRaspberry) < 0) {
+					deployApp(itemsAtRaspberryNew[i], "Raspberry");
+				}
+			}
+
+			// Deploy to Notebook
+			var arrayLength = itemsAtNotebookNew.length;
+			for (var i = 0; i < arrayLength; i++) {
+				if ($.inArray(itemsAtNotebookNew[i], itemsAtNotebook) < 0) {
+					deployApp(itemsAtNotebookNew[i], "Notebook");
+				}
+			}
+
+			itemsAtRaspberry = itemsAtRaspberryNew;
+			itemsAtNotebook = itemsAtNotebookNew;
+		}
+	}).disableSelection();
+});
+</script>
+</head>
+<body>
+
+<h1>Welcome to the Siemens Fog Manager!</h1>
+
+<table width="100%"><tr><td width="33%">
+<h2>Available Applications</h2>
+</td>
+
+<td width="33%">
+<h2>Raspberry Pi</h2>
+</td>
+
+<td width="33%">
+<h2>Simon's Notebook</h2>
+</td></tr>
+
+<tr><td><ul id="sortable1" class="connectedSortable">
+<li class="ui-state-default" id="cpuMonitor">CPU Monitor</li>
+<li class="ui-state-default" id="robotWinker">RoBob Winker</li>
+</ul></td>
+
+<td><ul id="sortable2" class="connectedSortable">
+
+</ul></td>
+
+<td><ul id="sortable3" class="connectedSortable">
+
+</ul></td></tr></table>
+
+
+</body>
+</html>
