@@ -2,11 +2,11 @@ sensorURL = 'http://128.32.211.227:9999';
 actuatorURL = '';
 
 function processLoad(cpuLoad) {
-	if (cpuLoad > 0.95) console.log('Very high load on ASBase!');
-	else if (cpuLoad > 0.8) console.log('High load on ASBase!');
-	else if (cpuLoad > 0.3) console.log('Medium load on ASBase.');
-	else if (cpuLoad > 0.1) console.log('Low load on ASBase.');
-	else console.log('No load on ASBase.');
+	if (cpuLoad > 0.95) console.log('Very high load on Raspberry!');
+	else if (cpuLoad > 0.8) console.log('High load on Raspberry!');
+	else if (cpuLoad > 0.3) console.log('Medium load on Raspberry.');
+	else if (cpuLoad > 0.1) console.log('Low load on Raspberry.');
+	else console.log('No load on Raspberry.');
 	
 	// TODO Talk to some actuator
 }
