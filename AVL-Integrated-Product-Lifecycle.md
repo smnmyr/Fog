@@ -62,7 +62,7 @@ Status: Post-Discussion Eric/Peter/Simon on 12.12.2017
 
 ### Concrete Collaboration Topics
 
-- Sub-Project A - Indicative Topic **Model**: *Enabling Full Product Life Cycle Customization through Integrated Knowledge Models*
+- Sub-Project A - Indicative Topic **Integration**: *Enabling Full Product Life Cycle Customization through Integrated Knowledge Models*
   - Target: Modeling and infrastructure
   - Focus on back-end, extensibility, tooling for realistic applications, prototypes
 - Sub-Project B1 - Indicative Topic **Complexity**: *Complexity-Resilient Industrial Environments*
